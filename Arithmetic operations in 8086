@@ -1,0 +1,129 @@
+IMPLEMENTATION OF ARITHMETIC OPERATIONS
+-------------------------------------------------
+16 BIT ADDITION
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+N1 DW 0508H
+N2 DW 0301H
+SUM DW 0000H
+CARRY DB 00H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV CL,00H
+        MOV AX,N1
+        MOV BX,N2
+        ADD AX,BX
+        JNC L1
+        INC CL
+L1:     MOV SUM,AX
+        MOV CARRY,CL
+CODE ENDS
+------------------------------------------------
+16 BIT SUBTRACTION
+
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+N1 DW 0508H
+N2 DW 0301H
+DIFF DW 0000H
+BORROW DB 00H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV CL,00H
+        MOV AX,N1
+        MOV BX,N2
+        SUB AX,BX
+        JNC L1
+        INC CL
+L1:     MOV DIFF,AX
+        MOV BORROW,CL
+CODE ENDS
+------------------------------------------------
+16 BIT MULTIPLICATION
+
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+N1 DW 0005H
+N2 DW 0003H
+LSB DW 0000H
+MSB DW 0000H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV AX,N1
+        MOV BX,N2
+        MUL BX
+        MOV MSB,DX
+        MOV LSB,AX
+CODE ENDS
+------------------------------------------------
+16 BIT DIVISION
+
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+N1 DW 0005H
+N2 DW 0003H
+QUO DW 0000H
+REM DW 0000H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV DX,0000H
+        MOV AX,N1
+        MOV BX,N2
+        DIV BX
+        MOV QUO,AX
+        MOV REM,DX
+CODE ENDS
+------------------------------------------------
+
+32 BIT ADDITION
+
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+LSBN1 DW EF12H
+MSBN1 DW ABCDH
+LSBN2 DW ABCDH
+MSBN2 DW 1234H
+LSB DW 0000H
+MSB DW 0000H
+CARRY DB 00H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV DH,00H
+        MOV AX,LSBN1
+        MOV BX,LSBN2
+        ADD AX,BX
+        MOV LSB,AX
+        MOV AX,MSBN1
+        MOV BX,MSBN2
+        ADC AX,BX
+        JNC L1
+        INC DH
+L1:
+        MOV MSB,AX
+        MOV CARRY,DH
+CODE ENDS
