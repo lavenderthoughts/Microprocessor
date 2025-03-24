@@ -1,0 +1,92 @@
+INTERFACING AND PROGRAMMING LED'S USING 8255
+---------------------------------------------------------------------------------------------------------------------------------
+1.HEXADECIMAL UPCOUNTER
+
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+LED DB 3FH,06H,5BH,4FH,66H,6DH,7DH,07H,7FH,6FH,77H,7CH,39H,5EH,79H,71H
+COUNT DB 10H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV DX,FFE6H
+        MOV AL,80H
+        OUT DX,AL
+REPEAT: LEA SI,LED
+        MOV CL,COUNT
+L1:     MOV AL,[SI]
+        MOV DX,FFE0H
+        OUT DX,AL
+        CALL DELAY
+        INC SI
+        DEC CL
+        JNZ L1
+        JMP REPEAT
+DELAY:  MOV AH,15H
+L3:     MOV BX,AAAAH
+L2:     DEC BX
+        JNZ L2
+        DEC AH
+        JNZ L3
+        RET
+CODE ENDS
+---------------------------------------------------------------------------------------------------------------------------------
+2.SCROLLING CS
+
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+C DB 39H
+S DB 6DH
+COUNT DB 02H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV DX,FFE6H
+        MOV AL,80H
+        OUT DX,AL
+        LEA SI,C
+        MOV CL,COUNT
+        MOV AL,[SI]
+        NOT AL
+        MOV DX,FFE2H
+        OUT DX,AL
+        CALL DELAY
+REPEAT: LEA SI,C
+        MOV AL,[SI]
+        MOV DX,FFE0H
+        OUT DX,AL
+        LEA SI,S
+        MOV AL,[SI]
+        MOV DX,FFE2H
+        NOT AL
+        OUT DX,AL
+        CALL DELAY
+        LEA SI,S
+        MOV AL,[SI]
+        MOV DX,FFE0H
+        OUT DX,AL
+        LEA SI,C
+        MOV AL,[SI]
+        MOV DX,FFE2H
+        NOT AL
+        OUT DX,AL
+        CALL DELAY
+        JMP REPEAT
+DELAY:  MOV AH,10H
+L3:     MOV BX,AAAAH
+L2:     DEC BX
+        JNZ L2
+        DEC AH
+        JNZ L3
+        RET
+CODE ENDS
+END
+---------------------------------------------------------------------------------------------------------------------------------
