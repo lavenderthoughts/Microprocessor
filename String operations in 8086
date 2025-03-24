@@ -1,0 +1,177 @@
+IMPLEMENTATION OF SEARCHING,SORTING AND STRING OPERATIONS IN 8086
+-----------------------------------------------------------------
+1.LINEAR SEARCH
+-----------------------------------------------------------------
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+ARRAY DB 05H,06H,07H,08H
+KEY DB 08H
+FOUND DB 00H
+DATA ENDS
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        LEA BX,ARRAY
+        MOV CL,KEY
+        MOV CH,00H
+        MOV DH,04H
+REPEAT: CMP [BX],CL
+        JNC L1
+        JNC CH
+        JMP EXIT
+L1:     INC BX
+        DEC DH
+        JNZ REPEAT
+EXIT:   MOV FOUND,CH
+CODE ENDS
+-----------------------------------------------------------------
+2.SORTING
+-----------------------------------------------------------------
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+ARRAY DW FF05H,ABCDH,9878H,56FAH,3FFFH
+COUNT DB 05H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV CL,COUNT
+        DEC CL
+REPEAT: MOV BX,OFFSET ARRAY
+        MOV CH,CL
+I1:     MOV AX,[BX]
+        CMP AX,2[BX]
+        JC L1
+        XCHG AX,2[BX]
+        XCHG AX,[BX]
+L1:     INC BX
+        INC BX
+        DEC CH
+        JNZ I1
+        DEC CL
+        JNZ REPEAT
+CODE ENDS
+-----------------------------------------------------------------
+3.OCCURENCE
+-----------------------------------------------------------------
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+STR DB "MICRO"
+KEY DB "C"
+FOUND DB 00H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA,ES:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV ES,AX
+        LEA DI,STR
+        MOV AL,KEY
+        MOV CH,FOUND
+        MOV DH,05H
+REPEAT: SCASB
+        JNZ L1
+        INC CH
+L1:     INC SI
+        DEC DH
+        JNZ REPEAT
+        MOV FOUND,CH
+CODE ENDS
+-----------------------------------------------------------------
+4.COMPARING TWO STRINGS
+-----------------------------------------------------------------
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+STR1 DB "AELLO"
+STR2 DB "HELLO"
+COUNT DB 05H
+ANS DB 00H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA,ES:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV ES,AX
+        LEA SI,STR1
+        LEA DI,STR2
+        MOV CL,COUNT
+RE:     CMPSB
+        JZ REPEAT
+        JC L1
+        MOV ANS,02H
+        JMP EXIT
+L1:     MOV ANS,01H
+        JMP EXIT
+L2:
+REPEAT: DEC CL
+        JNZ RE
+EXIT:   HLT
+CODE ENDS
+-----------------------------------------------------------------
+5.AVERAGE OF N NUMBERS
+-----------------------------------------------------------------
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+ARRAY DW 0005H,0006H,0007H,0008H
+COUNT DW 0004H
+SUM DW 0000H
+AVG DB 00H
+DATA ENDS
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV CX,COUNT
+        MOV BX,OFFSET ARRAY
+        MOV AX,0000H
+REPEAT: ADD AX,[BX]
+        INC BX
+        INC BX
+        DEC CX
+        JNZ REPEAT
+        MOV SUM,AX
+        MOV CX,COUNT
+        DIV CL
+        MOV AVG,AL
+CODE ENDS
+-----------------------------------------------------------------
+6.NO OF WORDS IN A STRING
+-----------------------------------------------------------------
+
+        OUTPUT 2500AD
+.ORG 3000H
+DATA SEGMENT
+STR DB 'THIS IS AN'
+COUNT DB 00H
+DATA ENDS
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV BX,OFFSET STR
+        MOV CL,0AH
+        MOV CH,00H
+REPEAT: MOV AL,[BX]
+        CMP AL," "
+        JNZ L1
+        INC CH
+L1:     INC BX
+        DEC CL
+        JNZ REPEAT
+        INC CH
+        MOV COUNT,CH
+        HLT
+CODE ENDS
+END
+-----------------------------------------------------------------
+
