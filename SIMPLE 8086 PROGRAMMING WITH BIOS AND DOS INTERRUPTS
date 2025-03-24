@@ -1,0 +1,192 @@
+SIMPLE 8086 PROGRAMMING WITH BIOS AND DOS INTERRUPTS
+----------------------------------------------------------------------------------------------------------------------------
+1.PATTERN
+
+CODE SEGMENT
+        MOV AH,02H
+        MOV DH,10H
+        MOV DL,10H
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,02H
+        MOV DH,11H
+        MOV DL,0FH
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,02H
+        MOV DH,11H
+        MOV DL,10H
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,02H
+        MOV DH,11H
+        MOV DL,11H
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,02H
+        MOV DH,12H
+        MOV DL,10H
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,02H
+        MOV DH,13H
+        MOV DL,10H
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,02H
+        MOV DH,14H
+        MOV DL,10H
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,02H
+        MOV DH,15H
+        MOV DL,0FH
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,02H
+        MOV DH,15H
+        MOV DL,10H
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,02H
+        MOV DH,15H
+        MOV DL,11H
+        MOV BH,00H
+        INT 10H
+        MOV AH,0AH
+        MOV AL,"*"
+        MOV BH,00H
+        MOV CX,0001H
+        INT 10H
+        MOV AH,4CH
+        INT 21H
+CODE ENDS
+END
+----------------------------------------------------------------------------------------------------------------------------
+2.FILEOPERATIONS
+
+DATA SEGMENT
+MSG DB "HI!"
+FILE DB "X.TXT"
+COUNT DW 0003H
+READ DB "   $"
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV AH,3DH
+        MOV AL,01H
+        MOV DX,OFFSET FILE
+        INT 21H
+        MOV BX,AX
+        MOV AH,40H
+        MOV CX,COUNT
+        MOV DX,OFFSET MSG
+        INT 21H
+        MOV AH,3EH
+        INT 21H
+        MOV AH,3EH
+        INT 21H
+        MOV AH,3DH
+        MOV AL,00H
+        MOV DX,OFFSET FILE
+        INT 21H
+        MOV BX,AX
+        MOV AH,3FH
+        MOV CX,COUNT
+        MOV DX,OFFSET READ
+        INT 21H
+        MOV AH,09H
+        MOV DX,OFFSET READ
+        INT 21H
+        MOV AH,4CH
+        INT 21H
+CODE ENDS
+END
+----------------------------------------------------------------------------------------------------------------------------
+3.STRING COMPARISON
+
+DATA SEGMENT
+S1 DB "AELLO",'$'
+S2 DB "HELLO",'$'
+M1 DB "EQUAL",'$'
+M2 DB "GREATER",'$'
+M3 DB "LESSER",'$'
+COUNT DW 0005H
+DATA ENDS
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA,ES:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV ES,AX
+        LEA SI,S1
+        LEA DI,S2
+        MOV CX,COUNT
+L1:     CMPSB
+        JNZ REPEAT
+        DEC CX
+        JNZ L1
+        MOV DX,OFFSET M1
+        JMP EXIT
+
+REPEAT: JC L2
+        MOV DX,OFFSET M2
+        JMP EXIT
+L2:     MOV DX,OFFSET M3
+        JMP EXIT
+
+
+EXIT:   MOV AH,09H
+        INT 21H
+        MOV AH,4CH
+        INT 21H
+CODE ENDS
+END
+----------------------------------------------------------------------------------------------------------------------------
