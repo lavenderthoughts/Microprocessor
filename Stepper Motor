@@ -1,0 +1,56 @@
+1.STEPPER MOTOR( 90 DEGREE FORWARD ROTATION AND 45 DEGREE BACKWARD ROTATION)
+        OUTPUT 2500AD
+.ORG 5000H
+DATA SEGMENT
+F DB 08H, 04H, 02H, 01H
+R DB 01H, 02H, 04H, 08H
+F1 DB 19H
+R1 DB 0CH
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE, DS:DATA
+        MOV AX, DATA
+        MOV DS, AX
+        MOV AL, 80H
+        MOV DX, FFE6H
+        OUT DX, AL
+        MOV CL, F1
+L2:     LEA SI, F
+        MOV CH, 04H
+L1:     MOV AL, [SI]
+        MOV DX, FFE0H
+        OUT DX, AL
+        CALL DELAY
+        INC SI
+        DEC CH
+        JNZ L1
+        DEC CL
+        JNZ L2
+        MOV AL,08H
+        MOV DX,FFE0H
+        OUT DX,AL
+        CALL DELAY
+        MOV AL,04H
+        MOV DX,FFE0H
+        OUT DX,AL
+        CALL DELAY
+        MOV CL,R1
+L4:     LEA DI, R
+        MOV CH, 04H
+L3:     MOV AL, [DI]
+        MOV DX, FFE0H
+        OUT DX, AL
+        CALL DELAY
+        INC DI
+        DEC CH
+        JNZ L3
+        DEC CL
+        JNZ L4
+        JMP EXIT
+DELAY:  MOV BX, AAAAH
+L5:     DEC BX
+        JNZ L5
+        RET
+EXIT:
+CODE ENDS
