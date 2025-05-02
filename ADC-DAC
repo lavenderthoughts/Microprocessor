@@ -1,0 +1,213 @@
+IMPLEMENTATION OF ADC AND DAC
+
+1. ADC
+
+        OUTPUT 2500AD
+.ORG 3000H
+CODE SEGMENT
+        ASSUME CS:CODE
+        MOV AX,DATA
+        MOV DS,AX
+        MOV AL,98H
+        MOV DX,FFE6H
+        OUT DX,AL
+
+L2:     MOV DX,FFE4H
+        MOV AL,00H
+        OUT DX,AL
+        MOV AL,00H
+        MOV DX,FFE2H
+        OUT DX,AL
+        MOV AL,02H
+        MOV DX,FFE4H
+        OUT DX,AL
+        MOV AL,03H
+        MOV DX,FFE4H
+        OUT DX,AL
+        MOV AL,01H
+        MOV DX,FFE4H
+        OUT DX,AL
+        MOV AL,00H
+        MOV DX,FFE4H
+        OUT DX,AL
+L1:     MOV DX,FFE4H
+        IN AL,DX
+        RCL AL,01H
+        JNC L1
+        MOV AL,04H
+        MOV DX,FFE4H
+        OUT DX,AL
+        MOV DX,FFE0H
+        IN AL,DX
+        MOV BL,00H
+        MOV BH,00H
+        DB 9AH,12H,0BH,00H,FFH
+        JMP L2
+CODE ENDS
+END
+
+2.SQUARE WAVE FORM
+        OUTPUT 2500AD
+.ORG 5000H
+CODE SEGMENT
+        ASSUME CS:CODE
+        MOV AL,80H
+        MOV DX,FFE6H
+        OUT DX,AL
+REPEAT: MOV AL,FFH
+        MOV DX,FFE0H
+        OUT DX,AL
+        CALL DELAY
+        MOV AL,00H
+        MOV AX,FFE0H
+        OUT DX,AL
+        CALL DELAY
+        JMP REPEAT
+DELAY:  MOV AH,10H
+L3:     MOV BX,0410H
+L2:     DEC BX
+        JNZ L2
+        DEC AH
+        JNZ L3
+        RET
+CODE ENDS
+
+3.TRIANGULAR WAVE FORM
+        OUTPUT 2500AD
+.ORG 5000H
+CODE SEGMENT
+        ASSUME CS:CODE
+        MOV AL,80H
+        MOV DX,FFE6H
+        OUT DX,AL
+REPEAT: MOV AL,00H
+L1:     MOV DX,FFE0H
+        OUT DX,AL
+        INC AL
+        CMP AL,FFH
+        JNZ L1
+
+L2:     DEC AL
+        OUT DX,AL
+        CMP AL,00H
+        JNZ L2
+        JMP REPEAT
+        CALL DELAY
+
+DELAY:  MOV AH,10H
+L3:     MOV BX,0410H
+L4:     DEC BX
+        JNZ L4
+        DEC AH
+        JNZ L3
+        RET
+
+CODE ENDS
+END
+
+4.SINUSOIDAL WAVE
+        OUTPUT 2500AD
+.ORG 5000H
+DATA SEGMENT
+SIN DB 80H,8BH,96H,A0H,ABH,B5H,BFH,CBH,D1H,D9H,E1H,E8H,EDH,F3H,F7H,FAH,FDH,FEH,FFH
+COUNT DB 13H
+DATA ENDS
+
+CODE SEGMENT
+        ASSUME CS:CODE,DS:DATA
+        MOV AX,DATA
+        MOV DS,AX
+        MOV AL,80H
+        MOV DX,FFE6H
+        OUT DX,AL
+REPEAT: LEA SI,SIN
+        MOV CL,COUNT
+L1:     MOV AL,[SI]
+        MOV DX,FFE0H
+        OUT DX,AL
+        INC SI
+        DEC CL
+        JNZ L1
+        MOV CL,COUNT
+L2:     DEC SI
+        MOV DX,FFE0H
+        OUT DX,AL
+        MOV AL,[SI]
+        DEC CL
+        JNZ L2
+        MOV CL,COUNT
+L3:     MOV AL,[SI]
+        NEG AL
+        MOV DX,FFE0H
+        OUT DX,AL
+        INC SI
+        DEC CL
+        JNZ L3
+        MOV CL,COUNT
+L4:     DEC SI
+        MOV AL,[SI]
+        NEG AL
+        MOV DX,FFE0H
+        OUT DX,AL
+        DEC CL
+        JNZ L4
+
+        JMP REPEAT
+CODE ENDS
+END
+
+5.EXTRA WAVE FORM
+
+        OUTPUT 2500AD
+.ORG 3000H
+CODE SEGMENT
+        ASSUME CS:CODE
+        MOV AL,80H
+        MOV DX,FFE6H
+        OUT DX,AL
+REPEAT:
+        MOV AL,80H
+        MOV DX,FFE0H
+        OUT DX,AL
+
+L1:     INC AL
+        MOV DX,FFE0H
+        OUT DX,AL
+        CMP AL,FFH
+        JNZ L1
+
+L2:     DEC AL
+        MOV DX,FFE0H
+        OUT DX,AL
+        CMP AL,00H
+        JNZ L2
+
+L3:     INC AL
+        MOV DX,FFE0H
+        OUT DX,AL
+        CMP AL,80H
+        JNZ L3
+
+        MOV AL,FFH
+        MOV DX,FFE0H
+        OUT DX,AL
+        CALL DELAY
+
+        MOV AL,00H
+        MOV DX,FFE0H
+        OUT DX,AL
+        CALL DELAY
+        MOV AL,80H
+        MOV DX,FFE0H
+        OUT DX,AL
+        JMP REPEAT
+
+DELAY:  MOV AH,05H
+L5:     MOV BX,00AAH
+L4:     DEC BX
+        JNZ L4
+        DEC AH
+        JNZ L5
+        RET
+CODE ENDS
+
