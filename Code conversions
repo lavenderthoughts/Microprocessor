@@ -1,0 +1,94 @@
+HEX TO ASCII
+.ORG 8000H
+        MOV DPTR,#9000H
+        MOVX A,@DPTR
+        MOV B,#10H
+        DIV AB
+        CJNE A,#0AH,L1
+L1:     JC L2
+        ADD A,#07H
+L2:     ADD A,#30H
+        MOV R0,A
+        MOV A,B
+        CJNE A,#0AH,L3
+L3:     JC L4
+        ADD A,#07H
+L4:     ADD A,#30H
+        MOV R1,A
+        INC DPTR
+        MOV A,R0
+        MOVX @DPTR,A
+        INC DPTR
+        MOV A,R1
+        INC R1
+        MOVX @DPTR,A
+
+ASCII TO HEX
+
+.ORG 8000H
+        MOV DPTR,#9000H
+        MOVX A,@DPTR
+        CJNE A,#40H,L1
+L1:     JC L2
+        CLR C
+        SUBB A,#07H
+L2:     CLR C
+        SUBB A,#30H
+        INC DPTR
+        MOVX @DPTR,A
+
+OCT TO HEX
+
+.ORG 8000H
+        MOV DPTR,#9000H
+        MOVX A,@DPTR
+        MOV B,#10H
+        DIV AB
+        MOV R0,B
+        MOV B,#08H
+        MUL AB
+        ADD A,R0
+        INC DPTR
+        MOVX @DPTR,A
+
+HEX TO OCT
+
+.ORG 8000H
+        MOV A,#7CH
+        MOV R0,A
+        ANL A,#07H
+        MOV R1,A
+        MOV A,R0
+        ANL A,#38H
+        RL A
+        ADD A,R1
+        MOV DPTR,#9000H
+        MOVX @DPTR,A
+        ANL A,#C0H
+        RL A
+        RL A
+        INC DPTR
+        MOVX @DPTR,A
+
+SORTING IN ASCENDING ORDER
+
+.ORG 8000H
+        MOV R0,#05H
+L1:     MOV DPTR,#9000H
+        MOV R1,#05H
+L2:     MOV R2,DPL
+        MOVX A,@DPTR
+        MOV B,A
+        INC DPTR
+        MOVX A,@DPTR
+        CJNE A,B,L3
+        AJMP L4
+L3:     JNC L4
+        MOV DPL,R2
+        MOVX @DPTR,A
+        INC DPTR
+        MOV A,B
+        MOVX @DPTR,A
+L4:     DJNZ R1,L2
+        DJNZ R0,L1
+L5:     SJMP L5
