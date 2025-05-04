@@ -143,7 +143,7 @@ L1:     INC DPTR
 L2:     SJMP L2
 
 --------------------------
-7.AVERAGE OF N NUMBERS
+7.SUM OF N NUMBERS
 
 --------------------------
 .ORG 8000H
